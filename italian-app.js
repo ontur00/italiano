@@ -157,13 +157,32 @@ function updateProgressDisplay() {
 }
 
 // Funkcja do wymawiania słowa
+let isSpeaking = false; // Flaga do śledzenia, czy wymowa jest w trakcie
+
 function pronounceWord() {
+    // Jeśli wymowa jest już w trakcie, nie uruchamiaj nowego odtwarzania
+    if (isSpeaking) return;
+    
     const word = currentWords[currentIndex];
     if (!word) return;
+    
+    // Ustawienie flagi, że wymowa jest w trakcie
+    isSpeaking = true;
     
     // Używamy Web Speech API do wymawiania słowa
     const utterance = new SpeechSynthesisUtterance(word.italian);
     utterance.lang = 'it-IT'; // Ustawienie języka na włoski
+    
+    // Obsługa zdarzenia zakończenia wymowy - resetuje flagę
+    utterance.onend = function() {
+        isSpeaking = false;
+    };
+    
+    // Obsługa błędu wymowy - resetuje flagę nawet gdy wystąpi błąd
+    utterance.onerror = function() {
+        isSpeaking = false;
+    };
+    
     speechSynthesis.speak(utterance);
 }
 
