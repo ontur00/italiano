@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italiano - Aplikacja do nauki włoskiego</title>
+    <link rel="stylesheet" href="italian-app.css">
+</head>
+<body>
+    <header>
+        <div class="app-title">
+            <div class="italy-flag"></div>
+            <h1>Italiano</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Ekran początkowy -->
+        <div id="start-screen" class="screen active">
+            <h2 style="text-align: center; margin: 2rem 0;">Nauka języka włoskiego</h2>
+            
+            <div class="categories">
+                <div class="category" data-category="basics">
+                    <h3>Podstawy</h3>
+                    <p>30 słów</p>
+                </div>
+                <div class="category" data-category="food">
+                    <h3>Jedzenie</h3>
+                    <p>25 słów</p>
+                </div>
+                <div class="category" data-category="travel">
+                    <h3>Podróże</h3>
+                    <p>20 słów</p>
+                </div>
+                <div class="category" data-category="daily">
+                    <h3>Codzienne</h3>
+                    <p>35 słów</p>
+                </div>
+            </div>
+            
+            <button id="start-learning" class="btn">Rozpocznij naukę</button>
+            
+            <div class="progress-section">
+                <h3 class="progress-title">Twój postęp</h3>
+                <div class="progress-bar">
+                    <div id="total-progress" class="progress-value" style="width: 0%"></div>
+                </div>
+                <p>0% ukończonych słów</p>
+                
+                <button id="show-progress" class="btn btn-secondary" style="margin-top: 1rem;">
+                    Szczegóły postępu
+                </button>
+            </div>
+        </div>
+
+        <!-- Ekran nauki -->
+        <div id="learning-screen" class="screen">
+            <div class="stats">
+                <div>
+                    <strong>Kategoria:</strong> <span id="current-category">Podstawy</span>
+                </div>
+                <div>
+                    <span id="current-progress">0</span>/<span id="total-words">30</span>
+                </div>
+            </div>
+            
+            <div id="flashcard" class="flashcard">
+                <button class="btn-pronunciation" onclick="pronounceWord()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+                <div class="card-word" id="italian-word">Ciao</div>
+                <div class="card-translation" id="polish-translation">Cześć</div>
+            </div>
+            
+            <div class="controls">
+                <button id="show-answer" class="btn">Pokaż tłumaczenie</button>
+                
+                <div class="action-btns" style="display: none" id="answer-buttons">
+                    <button class="btn btn-action btn-wrong" id="wrong-button">
+                        <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Nie wiedziałem
+                    </button>
+                    <button class="btn btn-action btn-correct" id="correct-button">
+                        <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Wiedziałem
+                    </button>
+                </div>
+                
+                <button id="back-to-menu" class="btn btn-secondary" style="margin-top: 2rem;">
+                    Wróć do menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modalne okno z postępami -->
+    <div id="progress-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Twój postęp</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="learned-words">0</div>
+                    <div class="stat-label">Nauczone słowa</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="accuracy-rate">0%</div>
+                    <div class="stat-label">Skuteczność</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="daily-streak">0</div>
+                    <div class="stat-label">Seria dni</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-sessions">0</div>
+                    <div class="stat-label">Sesje nauki</div>
+                </div>
+            </div>
+            
+            <h3>Postęp w kategoriach</h3>
+            <div style="margin: 1rem 0;">
+                <div>Podstawy</div>
+                <div class="progress-bar">
+                    <div id="basics-progress" class="progress-value" style="width: 0%"></div>
+                </div>
+                
+                <div>Jedzenie</div>
+                <div class="progress-bar">
+                    <div id="food-progress" class="progress-value" style="width: 0%"></div>
+                </div>
+                
+                <div>Podróże</div>
+                <div class="progress-bar">
+                    <div id="travel-progress" class="progress-value" style="width: 0%"></div>
+                </div>
+                
+                <div>Codzienne</div>
+                <div class="progress-bar">
+                    <div id="daily-progress" class="progress-value" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="recent-words">
+                <h3>Ostatnio nauczone słowa</h3>
+                <ul class="word-list" id="recent-words-list">
+                    <!-- Będzie wypełnione przez JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Italiano - Aplikacja do nauki języka włoskiego &copy; 2025
+    </footer>
+
+    <script src="italian-app-data.js"></script>
+    <script src="italian-app.js"></script>
+</body>
+</html>
